@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Buton basıldığında -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#1976D2" /> <!-- Basıldığında arka plan rengi (mavi tonu) -->
+            <corners android:radius="8dp" /> <!-- Köşe yuvarlatma miktarı -->
+        </shape>
+    </item>
+
+    <!-- Buton normal durumda -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#2196F3" /> <!-- Normal durumda arka plan rengi (mavi tonu) -->
+            <corners android:radius="8dp" /> <!-- Köşe yuvarlatma miktarı -->
+        </shape>
+    </item>
+
+</selector>
