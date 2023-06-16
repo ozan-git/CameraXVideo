@@ -108,4 +108,16 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     implementation "androidx.camera:camera-video:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
+
+    // vimeo
+    implementation "com.github.vimeo.vimeo-networking-java:vimeo-networking:3.12.0"
+    implementation "com.github.vimeo.vimeo-networking-java:models:3.12.0"
+
+    // okhttp3 and retrofit2
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 }
