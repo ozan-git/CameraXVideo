@@ -18,9 +18,7 @@
 
 package com.example.android.camerax.video.fragments
 
-import android.content.ContentResolver
 import android.database.Cursor
-import android.database.CursorIndexOutOfBoundsException
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -28,18 +26,22 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
-import androidx.navigation.fragment.navArgs
-import com.example.android.camerax.video.databinding.FragmentVideoViewerBinding
-import android.util.TypedValue
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
+import com.clickntap.vimeo.VimeoResponse
 import com.example.android.camerax.video.R
+import com.example.android.camerax.video.VimeoManager
+import com.example.android.camerax.video.databinding.FragmentVideoViewerBinding
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 /**
  * VideoViewerFragment:
@@ -56,18 +58,20 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentVideoViewerBinding.inflate(inflater, container, false)
         // UI adjustment + hacking to display VideoView use tips / capture result
         val tv = TypedValue()
         if (requireActivity().theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            val actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-            binding.videoViewerTips.y  = binding.videoViewerTips.y - actionBarHeight
+            val actionBarHeight =
+                TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+            binding.videoViewerTips.y = binding.videoViewerTips.y - actionBarHeight
         }
 
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -92,6 +96,62 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
         binding.backButton.setOnClickListener {
             Navigation.findNavController(requireActivity(), R.id.fragment_container).navigateUp()
         }
+
+        binding.uploadButton.setOnClickListener {
+            val videoUri: Uri = args.uri
+            // Create an instance of the VimeoManager class
+            val vimeoManager = VimeoManager()
+
+            // Convert the URI to a File object
+            val videoFile = getAbsolutePathFromUri(videoUri)?.let { it1 -> File(it1) }
+
+            // Upload the video to Vimeo
+            try {
+                val videoEndpoint = vimeoManager.addVideo(videoFile!!)
+                // Handle the successful upload
+                // You can display a success message to the user or perform additional operations
+                displaySuccessMessage("Video uploaded successfully!")
+                // You can also retrieve additional information about the uploaded video if needed
+                val videoInfo = vimeoManager.getVideoInfo(videoEndpoint)
+                displayVideoInfo(videoInfo) // Implement this method to display the video info
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                displayErrorMessage("Failed to upload the video: ${e.message}")
+
+            }
+
+        }
+    }
+
+    private fun displayErrorMessage(s: String) {
+        binding.videoViewerTips.text = s
+    }
+
+    private fun displayVideoInfo(videoInfo: VimeoResponse) {
+        binding.videoViewerTips.text = videoInfo.toString()
+    }
+
+    private fun displaySuccessMessage(s: String) {
+        binding.videoViewerTips.text = s
+    }
+
+    private fun createTempFileFromStream(inputStream: InputStream?): File? {
+        inputStream ?: return null
+
+        val tempFile = File.createTempFile("temp", null)
+        tempFile.deleteOnExit()
+
+        FileOutputStream(tempFile).use { outputStream ->
+            val buffer = ByteArray(4 * 1024)
+            var bytesRead: Int
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                outputStream.write(buffer, 0, bytesRead)
+            }
+            outputStream.flush()
+        }
+
+        return tempFile
     }
 
     override fun onDestroyView() {
@@ -106,7 +166,7 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
      *   - the captured video
      *   - the file size and location
      */
-    private fun showVideo(uri : Uri) {
+    private fun showVideo(uri: Uri) {
         val fileSize = getFileSizeFromUri(uri)
         if (fileSize == null || fileSize <= 0) {
             Log.e("VideoViewerFragment", "Failed to get recorded file size, could not be played!")
@@ -131,11 +191,15 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
      * A helper function to get the captured file location.
      */
     private fun getAbsolutePathFromUri(contentUri: Uri): String? {
-        var cursor:Cursor? = null
+        var cursor: Cursor? = null
         return try {
-            cursor = requireContext()
-                .contentResolver
-                .query(contentUri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
+            cursor = requireContext().contentResolver.query(
+                contentUri,
+                arrayOf(MediaStore.Images.Media.DATA),
+                null,
+                null,
+                null
+            )
             if (cursor == null) {
                 return null
             }
@@ -143,10 +207,12 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
             cursor.moveToFirst()
             cursor.getString(columnIndex)
         } catch (e: RuntimeException) {
-            Log.e("VideoViewerFragment", String.format(
-                "Failed in getting absolute path for Uri %s with Exception %s",
-                contentUri.toString(), e.toString()
-            )
+            Log.e(
+                "VideoViewerFragment", String.format(
+                    "Failed in getting absolute path for Uri %s with Exception %s",
+                    contentUri.toString(),
+                    e.toString()
+                )
             )
             null
         } finally {
@@ -158,9 +224,7 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
      * A helper function to retrieve the captured file size.
      */
     private fun getFileSizeFromUri(contentUri: Uri): Long? {
-        val cursor = requireContext()
-            .contentResolver
-            .query(contentUri, null, null, null, null)
+        val cursor = requireContext().contentResolver.query(contentUri, null, null, null, null)
             ?: return null
 
         val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
