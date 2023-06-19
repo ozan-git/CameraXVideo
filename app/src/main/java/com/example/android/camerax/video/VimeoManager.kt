@@ -1,14 +1,14 @@
 package com.example.android.camerax.video
 
-import com.clickntap.vimeo.Vimeo
-import com.clickntap.vimeo.VimeoResponse
+import com.example.android.camerax.video.vimeo.Vimeo
+import com.example.android.camerax.video.vimeo.VimeoResponse
 import java.io.File
 
 class VimeoManager {
     private val vimeo: Vimeo
 
     init {
-        val accessToken = "d43b63cdb265ba0655c0bdbe5a8790a3"
+        val accessToken = "549c86b0dbe2d671ef63e503c4af2c60"
         vimeo = Vimeo(accessToken)
     }
 
