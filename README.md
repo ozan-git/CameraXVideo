@@ -1,6 +1,20 @@
 
-Android CameraXVideo Sample
+Vimeo Android App
 ===========================
+This Android application enables video uploading to Vimeo. To use the app, you need to obtain a Personal 
+Access Token. You can generate an access token for scripts or testing purposes by following the instructions below.
+## Generating an Access Token
+
+1. Go to the [Access Token Generator](https://developer.vimeo.com/apps) page.
+2. Choose whether you want to generate an authenticated or unauthenticated access token.
+3. Select the required scopes for the token. The app requires the following scopes: Public, Private, Purchased, Create, Edit, Delete, Interact, Upload, Promo Codes, Stats, and Video Files.
+4. Click on the "Generate Token" button.
+5. Copy the generated access token.
+
+## Configuring the App
+
+1. Open the `Core->Constants.kt` file.
+2. Find the `ACCESS_TOKEN` constant and replace its value with your generated access token.
 
 This sample demonstrates CameraX Video Capture (Recorder) API with Capture + Preview use case combination.
 VideoCapture is in early release cycle, try it out and share your
