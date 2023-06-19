@@ -43,8 +43,7 @@ import java.nio.ByteBuffer
  */
 class YuvToRgbConverter(context: Context) {
     private val rs = RenderScript.create(context)
-    private val scriptYuvToRgb =
-        ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs))
+    private val scriptYuvToRgb = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs))
 
     // Do not add getters/setters functions to these private variables
     // because yuvToRgb() assume they won't be modified elsewhere
@@ -59,23 +58,16 @@ class YuvToRgbConverter(context: Context) {
         yuvBits = yuvBuffer.buffer
 
         if (needCreateAllocations(image, yuvBuffer)) {
-            val yuvType = Type.Builder(rs, Element.U8(rs))
-                .setX(image.width)
-                .setY(image.height)
+            val yuvType = Type.Builder(rs, Element.U8(rs)).setX(image.width).setY(image.height)
                 .setYuvFormat(yuvBuffer.type)
             inputAllocation = Allocation.createTyped(
-                rs,
-                yuvType.create(),
-                Allocation.USAGE_SCRIPT
+                rs, yuvType.create(), Allocation.USAGE_SCRIPT
             )
             bytes = ByteArray(yuvBuffer.buffer.capacity())
-            val rgbaType = Type.Builder(rs, Element.RGBA_8888(rs))
-                .setX(image.width)
-                .setY(image.height)
+            val rgbaType =
+                Type.Builder(rs, Element.RGBA_8888(rs)).setX(image.width).setY(image.height)
             outputAllocation = Allocation.createTyped(
-                rs,
-                rgbaType.create(),
-                Allocation.USAGE_SCRIPT
+                rs, rgbaType.create(), Allocation.USAGE_SCRIPT
             )
         }
 
@@ -91,9 +83,8 @@ class YuvToRgbConverter(context: Context) {
 
     private fun needCreateAllocations(image: Image, yuvBuffer: YuvByteBuffer): Boolean {
         return (inputAllocation == null ||               // the very 1st call
-            inputAllocation!!.type.x != image.width ||   // image size changed
-            inputAllocation!!.type.y != image.height ||
-            inputAllocation!!.type.yuv != yuvBuffer.type || // image format changed
-            bytes.size == yuvBuffer.buffer.capacity())
+                inputAllocation!!.type.x != image.width ||   // image size changed
+                inputAllocation!!.type.y != image.height || inputAllocation!!.type.yuv != yuvBuffer.type || // image format changed
+                bytes.size == yuvBuffer.buffer.capacity())
     }
 }

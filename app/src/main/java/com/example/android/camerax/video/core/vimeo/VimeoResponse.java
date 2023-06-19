@@ -1,4 +1,4 @@
-package com.example.android.camerax.video.vimeo;
+package com.example.android.camerax.video.core.vimeo;
 
 import androidx.annotation.NonNull;
 

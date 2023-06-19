@@ -1,6 +1,9 @@
 <resources>
     <color name="transparent">#00000000</color>
     <color name="ic_white">#FFFFFFFF</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <!-- light blue 100 with 60^% opacity -->
+    <color name="light_blue_100_60">#99B3E5FC</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
     <color name="light_blue_A200">#FF40C4FF</color>

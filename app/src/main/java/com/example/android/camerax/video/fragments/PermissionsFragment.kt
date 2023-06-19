@@ -35,8 +35,8 @@ import com.example.android.camerax.video.R
 import com.example.android.camerax.video.databinding.FragmentPermissionBinding
 
 private var PERMISSIONS_REQUIRED = arrayOf(
-    Manifest.permission.CAMERA,
-    Manifest.permission.RECORD_AUDIO)
+    Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO
+)
 
 /**
  * This [Fragment] requests permissions and, once granted, it will navigate to the next fragment
@@ -57,35 +57,37 @@ class PermissionsFragment : Fragment() {
             activityResultLauncher.launch(PERMISSIONS_REQUIRED)
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentPermissionBinding.inflate(inflater, container, false).also {
             if (hasPermissions(requireContext())) {
                 navigateToCapture()
             } else {
-                Log.e(PermissionsFragment::class.java.simpleName,
-                    "Re-requesting permissions ...")
+                Log.e(
+                    PermissionsFragment::class.java.simpleName, "Re-requesting permissions ..."
+                )
                 activityResultLauncher.launch(PERMISSIONS_REQUIRED)
             }
         }.root
     }
+
     companion object {
         /** Convenience method used to check if all permissions required by this app are granted */
         fun hasPermissions(context: Context) = PERMISSIONS_REQUIRED.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
     }
+
     private val activityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions())
-        { permissions ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             // Handle Permission granted/rejected
             var permissionGranted = true
             permissions.entries.forEach {
-                if (it.key in PERMISSIONS_REQUIRED && !it.value)
-                    permissionGranted = false
+                if (it.key in PERMISSIONS_REQUIRED && !it.value) permissionGranted = false
             }
             if (permissionGranted && permissions.isNotEmpty()) {
                 navigateToCapture()
@@ -98,7 +100,8 @@ class PermissionsFragment : Fragment() {
     private fun navigateToCapture() {
         lifecycleScope.launchWhenStarted {
             Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(
-                PermissionsFragmentDirections.actionPermissionsFragmentToMeetingFragment())
+                PermissionsFragmentDirections.actionPermissionsFragmentToMeetingFragment()
+            )
         }
     }
 }

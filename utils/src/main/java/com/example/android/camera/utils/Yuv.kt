@@ -40,7 +40,7 @@ the conversion is done into these formats.
 More about each format: https://www.fourcc.org/yuv.php
 */
 
-@kotlin.annotation.Retention(AnnotationRetention.SOURCE)
+@Retention(AnnotationRetention.SOURCE)
 @IntDef(ImageFormat.NV21, ImageFormat.YUV_420_888)
 annotation class YuvType
 
@@ -58,14 +58,12 @@ class YuvByteBuffer(image: Image, dstBuffer: ByteBuffer? = null) {
             ImageFormat.NV21
         }
         val size = image.width * image.height * 3 / 2
-        buffer = if (
-            dstBuffer == null || dstBuffer.capacity() < size ||
-            dstBuffer.isReadOnly || !dstBuffer.isDirect
-        ) {
-            ByteBuffer.allocateDirect(size) }
-        else {
-            dstBuffer
-        }
+        buffer =
+            if (dstBuffer == null || dstBuffer.capacity() < size || dstBuffer.isReadOnly || !dstBuffer.isDirect) {
+                ByteBuffer.allocateDirect(size)
+            } else {
+                dstBuffer
+            }
         buffer.rewind()
 
         removePadding(wrappedImage)
@@ -113,7 +111,7 @@ class YuvByteBuffer(image: Image, dstBuffer: ByteBuffer? = null) {
     private fun removePaddingCompact(
         plane: PlaneWrapper,
         dst: ByteBuffer,
-        offset: Int
+        offset: Int,
     ) {
         require(plane.pixelStride == 1) {
             "use removePaddingCompact with pixelStride == 1"
@@ -132,7 +130,7 @@ class YuvByteBuffer(image: Image, dstBuffer: ByteBuffer? = null) {
     private fun removePaddingNotCompact(
         image: ImageWrapper,
         dst: ByteBuffer,
-        offset: Int
+        offset: Int,
     ) {
         require(image.u.pixelStride == 2) {
             "use removePaddingNotCompact pixelStride == 2"
@@ -157,8 +155,8 @@ class YuvByteBuffer(image: Image, dstBuffer: ByteBuffer? = null) {
         return duplicate.slice()
     }
 
-    private class ImageWrapper(image:Image) {
-        val width= image.width
+    private class ImageWrapper(image: Image) {
+        val width = image.width
         val height = image.height
         val y = PlaneWrapper(width, height, image.planes[0])
         val u = PlaneWrapper(width / 2, height / 2, image.planes[1])
@@ -171,9 +169,7 @@ class YuvByteBuffer(image: Image, dstBuffer: ByteBuffer? = null) {
                 "Pixel stride for Y plane must be 1 but got ${y.pixelStride} instead."
             }
             require(u.pixelStride == v.pixelStride && u.rowStride == v.rowStride) {
-                "U and V planes must have the same pixel and row strides " +
-                "but got pixel=${u.pixelStride} row=${u.rowStride} for U " +
-                "and pixel=${v.pixelStride} and row=${v.rowStride} for V"
+                "U and V planes must have the same pixel and row strides " + "but got pixel=${u.pixelStride} row=${u.rowStride} for U " + "and pixel=${v.pixelStride} and row=${v.rowStride} for V"
             }
             require(u.pixelStride == 1 || u.pixelStride == 2) {
                 "Supported" + " pixel strides for U and V planes are 1 and 2"

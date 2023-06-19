@@ -35,12 +35,11 @@ fun getAspectRatio(quality: Quality): Int {
  */
 fun getAspectRatioString(quality: Quality, portraitMode: Boolean): String {
     val hdQualities = arrayOf(Quality.UHD, Quality.FHD, Quality.HD)
-    val ratio =
-        when {
-            hdQualities.contains(quality) -> Pair(16, 9)
-            quality == Quality.SD -> Pair(4, 3)
-            else -> throw UnsupportedOperationException()
-        }
+    val ratio = when {
+        hdQualities.contains(quality) -> Pair(16, 9)
+        quality == Quality.SD -> Pair(4, 3)
+        else -> throw UnsupportedOperationException()
+    }
 
     return if (portraitMode) "V,${ratio.second}:${ratio.first}"
     else "H,${ratio.first}:${ratio.second}"

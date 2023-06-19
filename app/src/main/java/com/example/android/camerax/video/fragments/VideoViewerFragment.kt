@@ -37,8 +37,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.android.camerax.video.R
 import com.example.android.camerax.video.VimeoManager
 import com.example.android.camerax.video.databinding.FragmentVideoViewerBinding
-import com.example.android.camerax.video.vimeo.Vimeo
-import com.example.android.camerax.video.vimeo.VimeoResponse
+import com.example.android.camerax.video.core.vimeo.VimeoResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -122,8 +121,6 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
                         displayVideoInfo(videoInfo) // Implement this method to display the video info
                     }
                 } catch (e: Exception) {
-                    // Handle the failed upload and display an error message to developers for debugging details
-                    Log.e("VideoViewerFragment", "Error uploading video", e)
                     withContext(Dispatchers.Main) {
                         displayErrorMessage("Error uploading video: ${e.message}")
                     }
@@ -159,7 +156,6 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
             }
             outputStream.flush()
         }
-
         return tempFile
     }
 

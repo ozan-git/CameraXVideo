@@ -1,14 +1,5 @@
-package com.example.android.camerax.video.vimeo;
+package com.example.android.camerax.video.core.vimeo;
 
-import android.util.Log;
-
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.ContentType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,6 +42,11 @@ public class Vimeo {
         this.tokenType = tokenType;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> castMap(Object obj) {
+        return (Map<K, V>) obj;
+    }
+
     public URL getProxy() {
         return proxy;
     }
@@ -59,7 +55,7 @@ public class Vimeo {
         this.proxy = proxy;
     }
 
-    public VimeoResponse getVideoInfo(String endpoint) throws IOException, JSONException {
+    public VimeoResponse getVideoInfo(String endpoint) throws IOException {
         return get(endpoint);
     }
 
@@ -68,7 +64,7 @@ public class Vimeo {
     }
 
     public VimeoResponse get(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpGet.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "GET", params, headers);
     }
 
     public VimeoResponse post(String endpoint) throws IOException {
@@ -76,42 +72,42 @@ public class Vimeo {
     }
 
     public VimeoResponse post(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpPost.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "POST", params, headers);
     }
 
-    public VimeoResponse put(String endpoint) throws IOException, JSONException {
+    public VimeoResponse put(String endpoint) throws IOException {
         return put(endpoint, null, null);
     }
 
     public VimeoResponse put(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpPut.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "PUT", params, headers);
     }
 
-    public VimeoResponse delete(String endpoint) throws IOException, JSONException {
+    public VimeoResponse delete(String endpoint) throws IOException {
         return delete(endpoint, null, null);
     }
 
     public VimeoResponse delete(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpDelete.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "DELETE", params, headers);
     }
 
-    public VimeoResponse patch(String endpoint) throws IOException, JSONException {
+    public VimeoResponse patch(String endpoint) throws IOException {
         return patch(endpoint, null, null);
     }
 
     public VimeoResponse patch(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpPatch.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "PATCH", params, headers);
     }
 
-    public VimeoResponse head(String endpoint) throws IOException, JSONException {
+    public VimeoResponse head(String endpoint) throws IOException {
         return head(endpoint, null, null);
     }
 
     public VimeoResponse head(String endpoint, Object params, Map<String, String> headers) throws IOException {
-        return apiRequest(endpoint, HttpHead.METHOD_NAME, params, headers);
+        return apiRequest(endpoint, "HEAD", params, headers);
     }
 
-    public VimeoResponse updateVideoMetadata(String videoEndpoint, String name, String description, String license, String privacyView, String privacyEmbed, boolean reviewLink) throws IOException, JSONException {
+    public VimeoResponse updateVideoMetadata(String videoEndpoint, String name, String description, String license, String privacyView, String privacyEmbed, boolean reviewLink) throws IOException {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
         params.put("description", description);
@@ -122,31 +118,31 @@ public class Vimeo {
         return patch(videoEndpoint, params, null);
     }
 
-    public VimeoResponse addVideoPrivacyDomain(String videoEndpoint, String domain) throws IOException, JSONException {
+    public VimeoResponse addVideoPrivacyDomain(String videoEndpoint, String domain) throws IOException {
         domain = URLEncoder.encode(domain, UTF_8);
         return put(videoEndpoint + "/privacy/domains/" + domain);
     }
 
-    public VimeoResponse getVideoPrivacyDomains(String videoEndpoint) throws IOException, JSONException {
+    public VimeoResponse getVideoPrivacyDomains(String videoEndpoint) throws IOException {
         return get(videoEndpoint + "/privacy/domains");
     }
 
-    public VimeoResponse removeVideo(String videoEndpoint) throws IOException, JSONException {
+    public VimeoResponse removeVideo(String videoEndpoint) throws IOException {
         return delete(videoEndpoint);
     }
 
-    public VimeoResponse setVideoThumb(String videoEndpoint, float time, boolean active) throws IOException, JSONException {
-        Map<String, String> params = new HashMap<String, String>();
+    public VimeoResponse setVideoThumb(String videoEndpoint, float time, boolean active) throws IOException {
+        Map<String, String> params = new HashMap<>();
         params.put("time", Float.toString(time));
         params.put("active", Boolean.toString(active));
         return post(videoEndpoint + "/pictures", params, null);
     }
 
-    public VimeoResponse getMe() throws IOException, JSONException {
+    public VimeoResponse getMe() throws IOException {
         return get("/me");
     }
 
-    public VimeoResponse getVideos() throws IOException, JSONException {
+    public VimeoResponse getVideos() throws IOException {
         return get("/me/videos");
     }
 
@@ -162,7 +158,7 @@ public class Vimeo {
         return searchVideos(params);
     }
 
-    public VimeoResponse searchVideos(Map<String, String> params) throws IOException, JSONException {
+    public VimeoResponse searchVideos(Map<String, String> params) throws IOException {
         return get("/videos", params, null);
     }
 
@@ -235,11 +231,11 @@ public class Vimeo {
         return get("/me/likes/" + videoId);
     }
 
-    public VimeoResponse likeVideo(String videoId) throws IOException, JSONException {
+    public VimeoResponse likeVideo(String videoId) throws IOException {
         return put("/me/likes/" + videoId);
     }
 
-    public VimeoResponse unlikeVideo(String videoId) throws IOException, JSONException {
+    public VimeoResponse unlikeVideo(String videoId) throws IOException {
         return delete("/me/likes/" + videoId);
     }
 
@@ -247,19 +243,19 @@ public class Vimeo {
         return get(videoEndPoint + "/presets/" + presetId);
     }
 
-    public VimeoResponse addEmbedPreset(String videoEndPoint, String presetId) throws IOException, JSONException {
+    public VimeoResponse addEmbedPreset(String videoEndPoint, String presetId) throws IOException {
         return put(videoEndPoint + "/presets/" + presetId);
     }
 
-    public VimeoResponse removeEmbedPreset(String videoEndPoint, String presetId) throws IOException, JSONException {
+    public VimeoResponse removeEmbedPreset(String videoEndPoint, String presetId) throws IOException {
         return delete(videoEndPoint + "/presets/" + presetId);
     }
 
-    public VimeoResponse getTextTracks(String videoEndPoint) throws IOException, JSONException {
+    public VimeoResponse getTextTracks(String videoEndPoint) throws IOException {
         return get(videoEndPoint + "/texttracks");
     }
 
-    public VimeoResponse getTextTrack(String videoEndPoint, String textTrackId) throws IOException, JSONException {
+    public VimeoResponse getTextTrack(String videoEndPoint, String textTrackId) throws IOException {
         return get(videoEndPoint + "/texttracks/" + textTrackId);
     }
 
@@ -272,26 +268,26 @@ public class Vimeo {
     }
 
     public String addTextTrack(String videoEndPoint, InputStream inputStream, boolean active, String type, String language, String name) throws IOException, VimeoException, JSONException {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("active", active ? "true" : "false");
         params.put("type", type);
         params.put("language", language);
         params.put("name", name);
 
-        VimeoResponse addVideoRespose = post(videoEndPoint + "/texttracks", params, null);
+        VimeoResponse addVideoResponse = post(videoEndPoint + "/texttracks", params, null);
         VimeoResponse response = null;
-        if (addVideoRespose.getStatusCode() == 201) {
-            String textTrackUploadLink = addVideoRespose.getJson().getString("link");
-            response = apiRequest(textTrackUploadLink, HttpPut.METHOD_NAME, inputStream, null);
+        if (addVideoResponse.getStatusCode() == 201) {
+            String textTrackUploadLink = addVideoResponse.getJson().getString("link");
+            response = apiRequest(textTrackUploadLink, "PUT", inputStream, null);
             if (response.getStatusCode() == 200) {
-                return addVideoRespose.getJson().getString("uri");
+                return addVideoResponse.getJson().getString("uri");
             }
         }
         throw new VimeoException("HTTP Status Code: " + Objects.requireNonNull(response).getStatusCode());
     }
 
-    public VimeoResponse updateTextTrack(String videoEndPoint, String textTrackUri, boolean active, String type, String language, String name) throws IOException, JSONException {
-        Map<String, String> params = new HashMap<String, String>();
+    public VimeoResponse updateTextTrack(String videoEndPoint, String textTrackUri, boolean active, String type, String language, String name) throws IOException {
+        Map<String, String> params = new HashMap<>();
         params.put("active", active ? "true" : "false");
         params.put("type", type);
         params.put("language", language);
@@ -299,7 +295,7 @@ public class Vimeo {
         return patch(videoEndPoint + textTrackUri, params, null);
     }
 
-    public VimeoResponse removeTextTrack(String videoEndPoint, String textTrackId) throws IOException, JSONException {
+    public VimeoResponse removeTextTrack(String videoEndPoint, String textTrackId) throws IOException {
         return delete(videoEndPoint + "/texttracks/" + textTrackId);
     }
 
@@ -360,7 +356,7 @@ public class Vimeo {
                 }
                 outputStream.close();
             } else {
-                Map<String, String> map = (Map<String, String>) params;
+                Map<String, String> map = castMap(params);
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     if (postData.length() != 0) postData.append('&');
@@ -388,16 +384,12 @@ public class Vimeo {
 
         int statusCode = connection.getResponseCode();
 
-        JSONObject responseJson;
+        JSONObject responseJson = null;
         JSONObject responseHeaders;
         String responseAsString = null;
 
         if (statusCode != HttpURLConnection.HTTP_NO_CONTENT) {
-            InputStream inputStream = null;
-            ByteArrayOutputStream outputStream = null;
-            try {
-                inputStream = connection.getInputStream();
-                outputStream = new ByteArrayOutputStream();
+            try (InputStream inputStream = connection.getInputStream(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -405,45 +397,28 @@ public class Vimeo {
                 }
                 responseAsString = outputStream.toString(StandardCharsets.UTF_8.name());
             } catch (IOException e) {
-                // Handle the exception or print the error message
                 e.printStackTrace();
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        // Handle the exception or print the error message
-                        e.printStackTrace();
-                    }
-                }
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (IOException e) {
-                        // Handle the exception or print the error message
-                        e.printStackTrace();
-                    }
-                }
             }
         }
 
         try {
-            responseJson = new JSONObject(Objects.requireNonNull(responseAsString));
+            if (responseAsString != null) responseJson = new JSONObject(responseAsString);
             responseHeaders = new JSONObject();
-            Map<String, List<String>> headerFields = connection.getHeaderFields();
+            if (!methodName.equals("PATCH")) {
+                Map<String, List<String>> headerFields = connection.getHeaderFields();
 
-            for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
-                String headerName = entry.getKey();
-                List<String> headerValues = entry.getValue();
-                if (headerName != null && headerValues != null && !headerValues.isEmpty()) {
-                    responseHeaders.put(headerName, headerValues.get(0));
+                for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+                    String headerName = entry.getKey();
+                    List<String> headerValues = entry.getValue();
+                    if (headerName != null && headerValues != null && !headerValues.isEmpty()) {
+                        responseHeaders.put(headerName, headerValues.get(0));
+                    }
                 }
             }
         } catch (JSONException e) {
             responseJson = new JSONObject();
             responseHeaders = new JSONObject();
         }
-
 
         VimeoResponse vimeoResponse = new VimeoResponse(responseJson, responseHeaders, statusCode);
         connection.disconnect();

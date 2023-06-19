@@ -157,9 +157,9 @@ class CaptureFragment : Fragment() {
     private fun startRecording() {
         // create MediaStoreOutputOptions for our recorder: resulting our recording!
         val name = "CameraX-recording-" + SimpleDateFormat(
-            FILENAME_FORMAT,
-            Locale.US
+            FILENAME_FORMAT, Locale.US
         ).format(System.currentTimeMillis()) + ".mp4"
+
         val contentValues = ContentValues().apply {
             put(MediaStore.Video.Media.DISPLAY_NAME, name)
         }
@@ -231,10 +231,7 @@ class CaptureFragment : Fragment() {
                             QualitySelector.getSupportedQualities(camera.cameraInfo)
                                 .filter { quality ->
                                     listOf(
-                                        Quality.UHD,
-                                        Quality.FHD,
-                                        Quality.HD,
-                                        Quality.SD
+                                        Quality.UHD, Quality.FHD, Quality.HD, Quality.SD
                                     ).contains(quality)
                                 }.also {
                                     cameraCapabilities.add(CameraCapability(camSelector, it))

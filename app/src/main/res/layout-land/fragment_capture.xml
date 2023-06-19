@@ -23,7 +23,7 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:background="@color/bkPurple"
+        android:background="@color/light_blue_200"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,10 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:translationY="-36dp"
-        android:buttonTint="@color/ic_white"
+        android:buttonTint="@color/txBlack"
         android:text="@string/audio"
-        android:textColor="@color/txWhite"
-        android:textSize="20sp"
+        android:textColor="@color/txBlack"
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="@id/land_vertical_guideline"
         app:layout_constraintTop_toTopOf="@id/land_horizontal_guideline" />
 
@@ -74,7 +74,6 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:translationY="-48dp"
         android:background="@drawable/ic_start"
         android:contentDescription="@string/capture"

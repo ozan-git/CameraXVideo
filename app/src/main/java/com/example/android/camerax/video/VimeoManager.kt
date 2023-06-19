@@ -1,16 +1,12 @@
 package com.example.android.camerax.video
 
-import com.example.android.camerax.video.vimeo.Vimeo
-import com.example.android.camerax.video.vimeo.VimeoResponse
+import com.example.android.camerax.video.core.Constants.Companion.ACCESS_TOKEN
+import com.example.android.camerax.video.core.vimeo.Vimeo
+import com.example.android.camerax.video.core.vimeo.VimeoResponse
 import java.io.File
 
 class VimeoManager {
-    private val vimeo: Vimeo
-
-    init {
-        val accessToken = "549c86b0dbe2d671ef63e503c4af2c60"
-        vimeo = Vimeo(accessToken)
-    }
+    private val vimeo: Vimeo = Vimeo(ACCESS_TOKEN)
 
     fun addVideo(file: File): String {
         return vimeo.addVideo(file)
@@ -27,16 +23,10 @@ class VimeoManager {
         license: String,
         privacyView: String,
         privacyEmbed: String,
-        reviewLink: Boolean
+        reviewLink: Boolean,
     ) {
         vimeo.updateVideoMetadata(
-            videoEndPoint,
-            name,
-            desc,
-            license,
-            privacyView,
-            privacyEmbed,
-            reviewLink
+            videoEndPoint, name, desc, license, privacyView, privacyEmbed, reviewLink
         )
     }
 

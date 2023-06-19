@@ -29,6 +29,6 @@ import androidx.camera.core.CameraXConfig
 class MainApplication : Application(), CameraXConfig.Provider {
     override fun getCameraXConfig(): CameraXConfig {
         return CameraXConfig.Builder.fromConfig(Camera2Config.defaultConfig())
-               .setMinimumLoggingLevel(Log.ERROR).build()
+            .setMinimumLoggingLevel(Log.ERROR).build()
     }
 }
