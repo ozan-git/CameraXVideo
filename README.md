@@ -6,7 +6,7 @@ Access Token. You can generate an access token for scripts or testing purposes b
 ## Generating an Access Token
 
 1. Go to the [Access Token Generator](https://developer.vimeo.com/apps) page.
-2. Choose whether you want to generate an authenticated or unauthenticated access token.
+2. Choose whether you want to generate an authenticated access token.
 3. Select the required scopes for the token. The app requires the following scopes: Public, Private, Purchased, Create, Edit, Delete, Interact, Upload, Promo Codes, Stats, and Video Files.
 4. Click on the "Generate Token" button.
 5. Copy the generated access token.
