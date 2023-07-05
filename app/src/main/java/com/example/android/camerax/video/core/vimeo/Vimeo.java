@@ -197,11 +197,11 @@ public class Vimeo {
         if (name != null) {
             params.put("name", name);
         }
-        if (privacy != null) {
-            for (String key : privacy.keySet()) {
-                params.put("privacy." + key, privacy.get(key));
-            }
-        }
+//        if (privacy != null) {
+//            for (String key : privacy.keySet()) {
+//                params.put("privacy." + key, privacy.get(key));
+//            }
+//        }
         return post("/me/videos", params, null);
     }
 

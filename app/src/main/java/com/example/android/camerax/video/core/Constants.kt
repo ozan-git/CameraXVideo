@@ -7,6 +7,6 @@ class Constants {
         const val ANIMATION_SLOW_MILLIS = 100L
         const val IMMERSIVE_FLAG_TIMEOUT = 500L
 
-        const val ACCESS_TOKEN = "Insert your access token here"
+        const val ACCESS_TOKEN = "fcbcabefd7d2527f1a25deacf79df472"
     }
 }

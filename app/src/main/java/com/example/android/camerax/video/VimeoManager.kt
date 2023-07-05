@@ -12,6 +12,10 @@ class VimeoManager {
         return vimeo.addVideo(file)
     }
 
+    fun addVideo(file: File, name: String, privacy: Map<String, String>): String {
+        return vimeo.addVideo(file, name, privacy)
+    }
+
     fun getVideoInfo(videoEndPoint: String): VimeoResponse {
         return vimeo.getVideoInfo(videoEndPoint)
     }

@@ -36,8 +36,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.android.camerax.video.R
 import com.example.android.camerax.video.VimeoManager
-import com.example.android.camerax.video.databinding.FragmentVideoViewerBinding
 import com.example.android.camerax.video.core.vimeo.VimeoResponse
+import com.example.android.camerax.video.databinding.FragmentVideoViewerBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -109,25 +109,31 @@ class VideoViewerFragment : androidx.fragment.app.Fragment() {
             // Upload the video to Vimeo
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val videoEndpoint = vimeoManager.addVideo(videoFile!!)
+                    val privacy = mapOf(
+                        "view" to "disable",
+                        "embed" to "public"
+                    )
+
+                    val videoEndpoint =
+                        vimeoManager.addVideo(videoFile!!, "NewVideoTitle", privacy)
                     // Handle the successful upload
                     // You can display a success message to the user or perform additional operations
                     withContext(Dispatchers.Main) {
                         displaySuccessMessage("Video uploaded successfully!")
                     }
                     // You can also retrieve additional information about the uploaded video if needed
-                    val videoInfo = vimeoManager.getVideoInfo(videoEndpoint)
-                    withContext(Dispatchers.Main) {
-                        displayVideoInfo(videoInfo) // Implement this method to display the video info
-                    }
+//                    val videoInfo = vimeoManager.getVideoInfo(videoEndpoint)
+//                    withContext(Dispatchers.Main) {
+//                        displayVideoInfo(videoInfo) // Implement this method to display the video info
+//                    }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         displayErrorMessage("Error uploading video: ${e.message}")
                     }
                 }
             }
-        }
 
+        }
     }
 
     private fun displayErrorMessage(s: String) {

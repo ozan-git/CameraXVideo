@@ -1,32 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_viewer_container"
-    android:background="@color/light_blue_200"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/light_blue_200">
 
     <VideoView
         android:id="@+id/video_viewer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center|center"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/video_viewer_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
+        android:layout_marginBottom="53dp"
         android:text="@string/video_viewer_tips"
         android:textColor="@color/txBlack"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/back_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/back_button_alt"
         android:scaleType="fitCenter"
@@ -39,7 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="128dp"
-        android:text="@string/upload_to_vimeo" />
-</FrameLayout>
+        android:layout_marginBottom="53dp"
+        android:text="@string/upload_to_vimeo"
+        app:layout_constraintBottom_toTopOf="@+id/video_viewer_tips"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
